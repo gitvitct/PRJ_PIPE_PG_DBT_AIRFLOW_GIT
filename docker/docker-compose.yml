@@ -1,0 +1,44 @@
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: postgres_dw
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+
+  airflow:
+    build: .
+    container_name: airflow
+    depends_on:
+      - postgres
+
+    # USA O MESMO USUARIO DO WSL
+    # user: "${UID}:${GID}"
+
+    env_file:
+      - .env
+
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}/${POSTGRES_DB}
+
+
+    ports:
+      - "8080:8080"
+
+    volumes:
+          - ../dags:/opt/airflow/dags
+          - ../data:/opt/airflow/data
+          - ../dbt_project:/opt/airflow/dbt_project
+          - ../logs:/opt/airflow/logs
+          - ../scripts:/opt/airflow/scripts          
+                    
+
+    command: standalone

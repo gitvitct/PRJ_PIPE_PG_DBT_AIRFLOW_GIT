@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+venv/
+.env
+
+logs/
+*.log
+
+airflow.db
+
+target/
+dbt_packages/
+
+.idea/
+.vscode/
+
+data/deadletter/
