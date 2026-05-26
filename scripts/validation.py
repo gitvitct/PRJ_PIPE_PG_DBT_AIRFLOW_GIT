@@ -19,6 +19,7 @@ def validate_sale(record):
 
     for field in required_fields:
 
+        #if field not in record or record[field] in [None, ""]:
         if field not in record:
             return False, f'Campo ausente: {field}'
 

@@ -1,6 +1,6 @@
 sales_pipeline:
 
-  target: "{{ env_var('DBT_TARGET', 'dev') }}"
+  target: "{{ env_var('DW_DB', 'dev') }}"
 
   outputs:
 
@@ -10,7 +10,7 @@ sales_pipeline:
       user: "{{ env_var('POSTGRES_USER') }}"
       password: "{{ env_var('POSTGRES_PASSWORD') }}"
       port: "{{ env_var('POSTGRES_PORT', '5432') | int }}"
-      dbname: "{{ env_var('POSTGRES_DB') }}"
+      dbname: "{{ env_var('DW_DB') }}"
       schema: "{{ env_var('POSTGRES_SCHEMA', 'public') }}"
       threads: "{{ env_var('DBT_THREADS', '2') | int }}"
       keepalives_idle: 0

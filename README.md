@@ -1,4 +1,4 @@
-# 🚀 Sales Pipeline - Airflow + PostgreSQL + dbt + Docker
+# 🚀 Sales Pipeline - Airflow + PostgreSQL + dbt + Docker ###########################
 
 Projeto de pipeline de dados utilizando:
 
@@ -19,63 +19,67 @@ O objetivo do projeto é simular uma pipeline moderna de engenharia de dados com
 
 ---
 
-# 📌 Arquitetura
+# 📌 Fluxo ##########################################################################
 
-Fluxo da pipeline:
+      Gerar vendas
+            ↓
+      Validar vendas
+            ↓
+      Válida?
+      ├─ SIM → INSERT PostgreSQL
+      └─ NÃO → Deadletter + Log
+            ↓
+      Commit
+            ↓
+      Salvar deadletter.json
 
-```text
-Python → PostgreSQL → Airflow → dbt
+
+# 📌 Arquitetura #####################################################################
 
 PRJ_PIPE_PG_DBT/
 │
 ├── dags/
 │   └── sales_pipeline.py
 │
-├── scripts/
-│   ├── create_tables.py
-│   ├── load_sales.py
-│   ├── validation.py
-│   ├── db_connection.py
-│   ├── logger_config.py
-│   └── make_deadletter_json.py
-│
-├── dbt_project/
-│   ├── models/
-│   ├── logs/dbt.log
-│   ├── dbt_project.yml
-│   └── profiles.yml
-│
 ├── data/
 │   └── deadletter/
 │       └── deadletter.json
 │
-├── logs/
-│   └── pipeline.log
-│
+├── dbt_project/
+│   ├── dbt_project.yml
+│   ├── logs/dbt.log
+│   ├── models/
+│   └── profiles.yml
 │
 ├── Dockers/
 │   ├── docker-compose.yml
 │   └── Dockerfile
 │
+├── logs/
+│   └── pipeline.log
+│
+├── scripts/
+│   ├── create_tables.py
+│   ├── db_connection.py
+│   ├── load_sales.py
+│   ├── logger_config.py
+│   ├── make_deadletter_json.py
+│   └── validation.py
 │
 └── README.md
 
 
-#################################################################################################
-#################################################################################################
-🧪 Validação de Dados
+
+# 🧪 Validação de Dados #############################################################
 
 A pipeline possui regras simples de qualidade:
 
-Valor da venda não pode ser negativo
-Campos obrigatórios devem existir
-Registros inválidos são enviados para:
-data/deadletter/deadletter.json
+      1- Valor da venda não pode ser negativo
+      2- Campos obrigatórios devem existir
+      3- Registros inválidos são enviados para: data/deadletter/deadletter.json
+      
 
-
-#################################################################################################
-#################################################################################################
-📝 Logs
+# 📝 Logs ###########################################################################
 
 Os logs da pipeline são armazenados em:
 
@@ -87,20 +91,58 @@ Exemplo:
 
 
 
-#################################################################################################
-#################################################################################################
 
-Gerar vendas
-      ↓
-Validar vendas
-      ↓
-Válida?
- ├─ SIM → INSERT PostgreSQL
- └─ NÃO → Deadletter + Log
-      ↓
-Commit
-      ↓
-Salvar deadletter.json
 
-#################################################################################################
-#################################################################################################
+
+# 📝 tests ###########################################################################
+
+
+PRJ_PIPE_PG_DBT_AIRFLOW/
+│
+├── tests/
+│   ├── unit/
+│   │   ├── test_validation.py
+│   │   ├── test_deadletter.py
+│   │   ├── test_db_connection.py
+│   │   └── test_logger.py
+│   │
+│   ├── integration/
+│   │   ├── test_postgres_connection.py
+│   │   ├── test_insert_raw_sales.py
+│   │   └── test_pipeline_flow.py
+│   │
+│   ├── airflow/
+│   │   └── test_dag_integrity.py
+│   │
+│   ├── dbt/
+│   │   └── test_dbt_models.py
+│   │
+│   └── e2e/
+│       └── test_full_pipeline.py
+│
+├── pytest.ini
+├── requirements.txt
+└── ...
+
+
+
+
+tests/
+│
+├── unit/
+│   ├── test_validation.py
+│   ├── test_deadletter.py
+│   └── test_transformations.py
+│
+├── integration/
+│   ├── test_postgres_load.py
+│   └── test_pipeline_flow.py
+│
+├── data_quality/
+│   ├── test_raw_sales_quality.py
+│   └── test_business_rules.py
+│
+├── dbt/
+│   └── test_dbt_models.py
+│
+└── conftest.py

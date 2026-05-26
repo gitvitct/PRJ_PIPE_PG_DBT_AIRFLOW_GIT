@@ -1,4 +1,6 @@
 apache-airflow
 psycopg2-binary
 dbt-postgres
-pandas
+pytest
+pytest-mock
+pytest-cov

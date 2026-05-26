@@ -15,6 +15,8 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
+log-path: logs
+
 models:
   sales_pipeline:
   

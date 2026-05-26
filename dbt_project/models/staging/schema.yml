@@ -1,0 +1,21 @@
+# dbt_project/models/staging/schema.yml
+
+version: 2
+
+models:
+
+  - name: stg_sales
+
+    columns:
+
+      - name: customer
+        tests:
+          - not_null
+
+      - name: amount
+        tests:
+          - not_null
+
+      - name: product
+        tests:
+          - not_null
