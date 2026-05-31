@@ -134,7 +134,7 @@ PRJ_PIPE_PG_DBT_AIRFLOW/
 
 # 🔄 Fluxo do Pipeline ################################################################################
 
-1. Criação da Tabela -------------------------------------
+1. Criação da Tabela 
 
 Task:
 
@@ -150,7 +150,7 @@ Task:
             );
 
 
-2. Geração e Carga de Dados -------------------------------------
+2. Geração e Carga de Dados 
 
 Task:
 
@@ -173,7 +173,7 @@ Task:
                   }
 
 
-3. Validação de Dados -------------------------------------
+3. Validação de Dados 
 
 As seguintes regras são aplicadas:
 
@@ -187,7 +187,7 @@ As seguintes regras são aplicadas:
             amount > 0
 
 
-4. Tratamento de Erros -------------------------------------
+4. Tratamento de Erros 
 
 Registros inválidos são enviados para:
 
@@ -204,7 +204,7 @@ Exemplo:
       }
 
 
-5. Transformação com dbt -------------------------------------
+5. Transformação com dbt 
 
 - 5.1 Camada Staging
 
@@ -339,13 +339,20 @@ Tabela final:
 
       --# Criar User no Airflow:
 
-		airflow users create \
-		  --username airflow \
-		  --firstname F_name \
-		  --lastname L_name \
-		  --role Admin \
-		  --email admin@email.com \
-		  --password airflow
+            '''bash     
+                  cd ${PROJECT_HOME}/docker
+
+                  docker exec -it docker-airflow-webserver-1 bash
+
+                  airflow users create \
+                  --username airflow \
+                  --firstname F_name \
+                  --lastname L_name \
+                  --role Admin \
+                  --email admin@email.com \
+                  --password airflow
+
+                  exit
 		  
 		
 
@@ -375,9 +382,6 @@ Vitor Melo
 Data Engineer | BI Engineer | Analytics Engineer
 
 Tecnologias:
-      Oracle Analytics Server (OAS)
-      OBIEE
-      ODI
       PostgreSQL
       Airflow
       dbt
@@ -386,3 +390,6 @@ Tecnologias:
       Docker
       Data Warehouse
       ETL / ELT
+      Oracle Analytics Server (OAS)
+      OBIEE
+      ODI
