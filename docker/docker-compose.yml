@@ -80,10 +80,11 @@ services:
     volumes:
       - ../dags:/opt/airflow/dags
       - ../data:/opt/airflow/data
-      - ../dbt_project:/opt/airflow/dbt_project
-      - airflow_logs:/opt/airflow/logs
+      - ../dbt_project:/opt/airflow/dbt_project      
       - ../scripts:/opt/airflow/scripts
       - ../tests:/opt/airflow/tests
+      - ../logs:/opt/airflow/logs
+      
 
     networks:
       - airflow_network
@@ -117,9 +118,9 @@ services:
       - ../dags:/opt/airflow/dags
       - ../data:/opt/airflow/data
       - ../dbt_project:/opt/airflow/dbt_project
-      - airflow_logs:/opt/airflow/logs
       - ../scripts:/opt/airflow/scripts
       - ../tests:/opt/airflow/tests
+      - ../logs:/opt/airflow/logs
 
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8080/health || exit 1"]
@@ -156,9 +157,9 @@ services:
       - ../dags:/opt/airflow/dags
       - ../data:/opt/airflow/data
       - ../dbt_project:/opt/airflow/dbt_project
-      - airflow_logs:/opt/airflow/logs
       - ../scripts:/opt/airflow/scripts
       - ../tests:/opt/airflow/tests
+      - ../logs:/opt/airflow/logs
 
     healthcheck:
       test: ["CMD-SHELL", "airflow jobs check --job-type SchedulerJob --hostname $$HOSTNAME"]
@@ -193,10 +194,11 @@ services:
     volumes:
       - ../dags:/opt/airflow/dags
       - ../data:/opt/airflow/data
-      - ../dbt_project:/opt/airflow/dbt_project
-      - airflow_logs:/opt/airflow/logs
+      - ../dbt_project:/opt/airflow/dbt_project      
       - ../scripts:/opt/airflow/scripts
       - ../tests:/opt/airflow/tests
+      - ../logs:/opt/airflow/logs
+      # - airflow_logs:/opt/airflow/logs (Log Apenas no volume docker / local OFF)
 
     networks:
       - airflow_network

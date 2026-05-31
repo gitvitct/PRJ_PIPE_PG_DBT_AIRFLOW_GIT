@@ -50,6 +50,14 @@ sudo chown -R 50000:root ../dbt_project/
 
 echo ""
 echo "========================================="
+echo "Ajustando permissões do LOG"
+echo "========================================="
+
+sudo chown -R 50000:root ../logs/
+
+
+echo ""
+echo "========================================="
 echo "Subindo containers"
 echo "========================================="
 
