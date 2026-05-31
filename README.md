@@ -41,16 +41,18 @@ Verificação:
 
       git clone https://github.com/gitvitct/PRJ_PIPE_PG_DBT_AIRFLOW_GIT.git
       
-      cd PRJ_PIPE_PG_DBT_AIRFLOW_GIT
+      cd "${prj_dir}"/PRJ_PIPE_PG_DBT_AIRFLOW_GIT
 
 
 # ⚙️ 4. Inicialização do Ambiente (Bootstrap) 
 
-      - Permissão de execução:
-            chmod +x bootstrap.sh
+      cd "${prj_dir}"/PRJ_PIPE_PG_DBT_AIRFLOW_GIT/docker 
 
-      - Execução do ambiente completo:
-            ./bootstrap.sh
+            - Permissão de execução:
+                  chmod +x bootstrap.sh
+
+            - Execução do ambiente completo:
+                  ./bootstrap.sh
 
 
 O que este script executa internamente:
@@ -58,16 +60,18 @@ O que este script executa internamente:
       Criação do ficheiro .env
       Definição de variáveis de ambiente:
       Postgres (AIRFLOW_DB + DW_DB)
-      credenciais padrão (admin/admin)
+      Credenciais padrão (admin/admin)
       Build das imagens Docker (Airflow + dbt + Postgres)
       Inicialização do Docker Compose
       Criação de diretórios de logs e permissões
       Inicialização do Airflow metadata database
+      
       Subida dos serviços:
-      postgres
-      airflow-webserver
-      airflow-scheduler
-      airflow-triggerer
+            postgres
+            pgAdmin
+            airflow-webserver
+            airflow-scheduler
+            airflow-triggerer
 
 
 # 🧩 5. Validação da Infraestrutura 
@@ -161,13 +165,12 @@ Ativar DAG:
 - Para reinicialização completa:
 
       docker compose down -v
-      ./bootstrap.sh
+      docker compose up -d
       
+   
 
 
-
-
-   # 📂 Estrutura do Projeto ################################################################################
+# 📂 Estrutura do Projeto ################################################################################
 
 PRJ_PIPE_PG_DBT_AIRFLOW/
       │
