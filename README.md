@@ -21,7 +21,7 @@ Pipeline desenvolvido com Apache Airflow, dbt, PostgreSQL, Docker e Pytest, simu
       tabelas analíticas (sales_summary)
 
 
-   # 📦 2. Pré-requisitos 
+# 📦 2. Pré-requisitos 
 
 Antes da instalação:
 
