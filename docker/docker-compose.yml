@@ -37,7 +37,8 @@ services:
   # =========================================================
   airflow-init:
     build: .
-    user: "50000:0"
+    #user: "50000:0"
+    user: "0:0"
 
     depends_on:
       postgres:

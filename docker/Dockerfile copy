@@ -4,18 +4,15 @@ USER root
 
 RUN apt-get update && apt-get install -y \
     gcc \
-    python3-dev \
-    && apt-get clean
+    python3-dev
 
-RUN mkdir -p \
-    /opt/airflow/logs \
-    /opt/airflow/logs/scheduler \
-    /opt/airflow/data/deadletter \
+RUN mkdir -p /opt/airflow/logs \
     /opt/airflow/dbt_project/logs \
     /tmp/dbt_logs
 
-RUN chown -R 50000:0 /opt/airflow /tmp/dbt_logs && \
-    chmod -R 775 /opt/airflow /tmp/dbt_logs
+RUN chmod -R 777 /opt/airflow/logs \
+    /opt/airflow/dbt_project \
+    /tmp/dbt_logs
 
 USER airflow
 
