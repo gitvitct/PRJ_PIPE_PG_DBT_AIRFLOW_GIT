@@ -37,14 +37,14 @@ Verificação:
       git --version
 
 
-   # 📥 3. Clonagem do Repositório 
+# 📥 3. Clonagem do Repositório 
 
       git clone https://github.com/gitvitct/PRJ_PIPE_PG_DBT_AIRFLOW_GIT.git
       
       cd PRJ_PIPE_PG_DBT_AIRFLOW_GIT
 
 
-   # ⚙️ 4. Inicialização do Ambiente (Bootstrap) 
+# ⚙️ 4. Inicialização do Ambiente (Bootstrap) 
 
       - Permissão de execução:
             chmod +x bootstrap.sh
@@ -70,7 +70,7 @@ O que este script executa internamente:
       airflow-triggerer
 
 
-   # 🧩 5. Validação da Infraestrutura 
+# 🧩 5. Validação da Infraestrutura 
 
       - Verificação dos containers:
             docker ps
@@ -82,7 +82,7 @@ O que este script executa internamente:
             airflow-triggerer (up)
 
 
-   # 🌐 6. Acesso à Interface Airflow 
+# 🌐 6. Acesso à Interface Airflow 
 
 - URL:
 
@@ -94,7 +94,7 @@ O que este script executa internamente:
       password: airflow
 
 
-   # 🔄 7. Execução do Pipeline (DAG) 
+# 🔄 7. Execução do Pipeline (DAG) 
 
 - No Airflow:
 
@@ -109,7 +109,7 @@ Ativar DAG:
             run_dbt           → transformação analítica
 
 
-   # 🗄️ 8. Validação no Banco de Dados 
+# 🗄️ 8. Validação no Banco de Dados 
 
 - Acesso via CLI:
 
@@ -132,7 +132,7 @@ Ativar DAG:
       public | sales_summary | table | admin
 
 
-   # 🧪 9. Execução Manual do dbt (Opcional) 
+# 🧪 9. Execução Manual do dbt (Opcional) 
 
 - Acesso ao container:
 
@@ -146,7 +146,7 @@ Ativar DAG:
             dbt run --profiles-dir .
 
 
-   # 📊 10. Monitoramento e Observabilidade 
+# 📊 10. Monitoramento e Observabilidade 
 
 - Logs Airflow:
       docker logs -f docker-airflow-scheduler-1
@@ -156,7 +156,7 @@ Ativar DAG:
       tail -f logs/pipeline.log
 
 
-   # 🔁 11. Reset / Rebuild do Ambiente 
+# 🔁 11. Reset / Rebuild do Ambiente 
 
 - Para reinicialização completa:
 
