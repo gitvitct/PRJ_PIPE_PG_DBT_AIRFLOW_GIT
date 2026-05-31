@@ -27,12 +27,14 @@ with DAG(
 
     create_table = BashOperator(
         task_id='create_table',
-        bash_command='python3 /opt/airflow/scripts/create_tables.py'
+        #bash_command='python3 /opt/airflow/scripts/create_tables.py'
+        bash_command='cd /opt/airflow && python -m scripts.create_tables'
     )
 
     load_sales = BashOperator(
         task_id='load_sales',
-        bash_command='python3 /opt/airflow/scripts/load_sales.py'
+        #bash_command='python3 /opt/airflow/scripts/load_sales.py'
+        bash_command='cd /opt/airflow && python -m scripts.load_sales'
     )
 
     run_dbt = BashOperator(

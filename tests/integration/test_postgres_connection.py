@@ -9,3 +9,5 @@ def test_postgres_connection(db_connection):
     result = cursor.fetchone()
 
     assert result[0] == 1
+
+    cursor.close()

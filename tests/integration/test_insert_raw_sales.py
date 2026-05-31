@@ -7,36 +7,48 @@ def test_insert_raw_sale(db_connection):
 
     cursor = db_connection.cursor()
 
+    # massa de teste
+    customer_id = 1
+    amount = 150.00
+    purchase_date = datetime.now()
+
+    # insert
     insert_sql = """
-        INSERT INTO raw_sales (
-            customer,
-            product,
-            quantity,
+        INSERT INTO public.raw_sales (
+            customer_id,
             amount,
-            created_at
+            purchase_date
         )
-        VALUES (%s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s)
     """
 
-    values = (
-        "Vitor",
-        "Mouse",
-        2,
-        150,
-        datetime.now()
+    cursor.execute(
+        insert_sql,
+        (
+            customer_id,
+            amount,
+            purchase_date
+        )
     )
-
-    cursor.execute(insert_sql, values)
 
     db_connection.commit()
 
+    # valida persistência
     cursor.execute("""
-        SELECT customer, product
-        FROM raw_sales
-        WHERE customer = 'Vitor'
-    """)
+        SELECT
+            customer_id,
+            amount
+        FROM public.raw_sales
+        WHERE customer_id = %s
+        ORDER BY purchase_date DESC
+        LIMIT 1
+    """, (customer_id,))
 
     result = cursor.fetchone()
 
-    assert result[0] == "Vitor"
-    assert result[1] == "Mouse"
+    # assertions
+    assert result is not None
+    assert result[0] == customer_id
+    assert float(result[1]) == amount
+
+    cursor.close()

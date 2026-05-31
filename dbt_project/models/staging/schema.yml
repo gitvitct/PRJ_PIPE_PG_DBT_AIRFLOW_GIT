@@ -8,7 +8,7 @@ models:
 
     columns:
 
-      - name: customer
+      - name: customer_id
         tests:
           - not_null
 
@@ -16,6 +16,6 @@ models:
         tests:
           - not_null
 
-      - name: product
+      - name: order_id
         tests:
           - not_null

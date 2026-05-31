@@ -36,7 +36,7 @@ O objetivo do projeto é simular uma pipeline moderna de engenharia de dados com
 
 # 📌 Arquitetura #####################################################################
 
-PRJ_PIPE_PG_DBT/
+PRJ_PIPE_PG_DBT_AIRFLOW/
 │
 ├── dags/
 │   └── sales_pipeline.py
@@ -65,6 +65,35 @@ PRJ_PIPE_PG_DBT/
 │   ├── logger_config.py
 │   ├── make_deadletter_json.py
 │   └── validation.py
+└── tests
+├── __init__.py
+├── __pycache__
+├── airflow
+│   ├── test_dag_integrity.py
+│   ├── test_dag_loaded.py
+│   └── test_dag_tasks.py
+├── conftest.py
+├── dbt
+│   ├── test_dbt_mart.py
+│   ├── test_dbt_models.py
+│   └── test_dbt_staging.py
+├── e2e
+│   └── test_end_to_end_pipeline.py
+├── integration
+│   ├── __init__.py
+│   ├── __pycache__
+│   ├── test_create_tables.py
+│   ├── test_insert_raw_sales.py
+│   ├── test_load_sales.py
+│   └── test_postgres_connection.py
+└── unit
+│    ├── __init__.py
+│    ├── __pycache__
+│    ├── test_db_connection.py
+│    ├── test_deadletter.py
+│    ├── test_logger.py
+│    └── test_validation.py
+│
 │
 └── README.md
 
@@ -92,57 +121,39 @@ Exemplo:
 
 
 
-
-
 # 📝 tests ###########################################################################
-
+# docker compose exec airflow-webserver pytest -v -p no:cacheprovider
 
 PRJ_PIPE_PG_DBT_AIRFLOW/
 │
-├── tests/
-│   ├── unit/
-│   │   ├── test_validation.py
-│   │   ├── test_deadletter.py
-│   │   ├── test_db_connection.py
-│   │   └── test_logger.py
-│   │
-│   ├── integration/
-│   │   ├── test_postgres_connection.py
-│   │   ├── test_insert_raw_sales.py
-│   │   └── test_pipeline_flow.py
-│   │
-│   ├── airflow/
-│   │   └── test_dag_integrity.py
-│   │
-│   ├── dbt/
-│   │   └── test_dbt_models.py
-│   │
-│   └── e2e/
-│       └── test_full_pipeline.py
-│
-├── pytest.ini
-├── requirements.txt
-└── ...
+.
+├── __init__.py
+├── __pycache__
+├── airflow
+│   ├── test_dag_integrity.py
+│   ├── test_dag_loaded.py
+│   └── test_dag_tasks.py
+├── conftest.py
+├── dbt
+│   ├── test_dbt_mart.py
+│   ├── test_dbt_models.py
+│   └── test_dbt_staging.py
+├── e2e
+│   └── test_end_to_end_pipeline.py
+├── integration
+│   ├── __init__.py
+│   ├── __pycache__
+│   ├── test_create_tables.py
+│   ├── test_insert_raw_sales.py
+│   ├── test_load_sales.py
+│   └── test_postgres_connection.py
+└── unit
+    ├── __init__.py
+    ├── __pycache__
+    ├── test_db_connection.py
+    ├── test_deadletter.py
+    ├── test_logger.py
+    └── test_validation.py
 
 
 
-
-tests/
-│
-├── unit/
-│   ├── test_validation.py
-│   ├── test_deadletter.py
-│   └── test_transformations.py
-│
-├── integration/
-│   ├── test_postgres_load.py
-│   └── test_pipeline_flow.py
-│
-├── data_quality/
-│   ├── test_raw_sales_quality.py
-│   └── test_business_rules.py
-│
-├── dbt/
-│   └── test_dbt_models.py
-│
-└── conftest.py

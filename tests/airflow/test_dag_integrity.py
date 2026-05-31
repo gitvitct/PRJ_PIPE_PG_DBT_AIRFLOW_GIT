@@ -2,7 +2,7 @@
 
 from airflow.models import DagBag
 
-
+#############################################################################################
 def test_dag_loaded():
 
     dagbag = DagBag()
@@ -10,6 +10,8 @@ def test_dag_loaded():
     assert dagbag.import_errors == {}
 
 
+
+#############################################################################################
 def test_sales_pipeline_exists():
 
     dagbag = DagBag()
@@ -19,6 +21,7 @@ def test_sales_pipeline_exists():
     assert dag is not None
 
 
+#############################################################################################
 def test_tasks_exist():
 
     dagbag = DagBag()
@@ -35,6 +38,7 @@ def test_tasks_exist():
         assert task in dag.task_ids
 
 
+#############################################################################################
 def test_task_dependencies():
 
     dagbag = DagBag()

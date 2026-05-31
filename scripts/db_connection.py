@@ -1,7 +1,8 @@
 import os
 import psycopg2
 
-from logger_config import logger
+#from logger_config import logger
+from scripts.logger_config import logger
 
 
 def get_connection():
