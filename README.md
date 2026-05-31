@@ -5,14 +5,14 @@
 
 Pipeline desenvolvido com Apache Airflow, dbt, PostgreSQL, Docker e Pytest, simulando um fluxo completo de ingestão, validação, transformação e disponibilização de dados para análise.
 
-Este projeto implementa um pipeline moderno de dados em ambiente containerizado, integrando:
+- Este projeto implementa um pipeline moderno de dados em ambiente containerizado, integrando:
 
-- PostgreSQL              → camada de armazenamento (DW + metadata Airflow)
-- Apache Airflow          → orquestração do pipeline (DAGs)
-- dbt (data build tool)   → transformação ELT (camada analítica)
-- Docker Compose          → provisionamento completo do ambiente
+      - PostgreSQL              → camada de armazenamento (DW + metadata Airflow)
+      - Apache Airflow          → orquestração do pipeline (DAGs)
+      - dbt (data build tool)   → transformação ELT (camada analítica)
+      - Docker Compose          → provisionamento completo do ambiente
 
-Fluxo de dados:
+- Fluxo de dados:
 
       Postgres (raw_sales)
             ↓
@@ -57,7 +57,7 @@ Verificação:
 
 O que este script executa internamente:
 
-      Criação do arquivo .env
+      Criação do ficheiro .env
       Definição de variáveis de ambiente:
       Postgres (AIRFLOW_DB + DW_DB)
       credenciais padrão (admin/admin)
@@ -74,14 +74,14 @@ O que este script executa internamente:
 
 # 🧩 5. Validação da Infraestrutura 
 
-- Verificação dos containers:
-      docker ps
+      - Verificação dos containers:
+            docker ps
 
-- Esperado:
-      postgres          (healthy)
-      airflow-webserver (healthy)
-      airflow-scheduler (healthy)
-      airflow-triggerer (up)
+      - Esperado:
+            postgres          (healthy)
+            airflow-webserver (healthy)
+            airflow-scheduler (healthy)
+            airflow-triggerer (up)
 
 
 # 🌐 6. Acesso à Interface Airflow 
@@ -98,7 +98,7 @@ O que este script executa internamente:
 
 # 🔄 7. Execução do Pipeline (DAG) 
 
-No Airflow:
+- No Airflow:
 
 Ativar DAG:
 
@@ -122,6 +122,7 @@ Ativar DAG:
 - Verificação:
 
       \dt
+
       SELECT * FROM public.raw_sales LIMIT 10;
       SELECT * FROM public.sales_summary;
 
@@ -141,10 +142,10 @@ Ativar DAG:
 
 - Execução:
 
-cd /opt/airflow/dbt_project
+      cd /opt/airflow/dbt_project
 
-      dbt debug --profiles-dir .
-      dbt run --profiles-dir .
+            dbt debug --profiles-dir .
+            dbt run --profiles-dir .
 
 
 # 📊 10. Monitoramento e Observabilidade 
@@ -162,7 +163,8 @@ cd /opt/airflow/dbt_project
 - Para reinicialização completa:
 
       docker compose down -v
-      docker compose up --build
+      ./bootstrap.sh
+      
 
 
 
