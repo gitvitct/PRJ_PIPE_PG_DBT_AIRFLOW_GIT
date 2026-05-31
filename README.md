@@ -1,3 +1,177 @@
+# 🚀 Instalação e Execução – PRJ_PIPE_PG_DBT_AIRFLOW (Nível Entrevista)
+
+
+# 🧠 1. Visão Geral da Arquitetura ..........................................................
+
+Este projeto implementa um pipeline moderno de dados em ambiente containerizado, integrando:
+
+PostgreSQL              → camada de armazenamento (DW + metadata Airflow)
+Apache Airflow          → orquestração do pipeline (DAGs)
+dbt (data build tool)   → transformação ELT (camada analítica)
+Docker Compose          → provisionamento completo do ambiente
+
+Fluxo de dados:
+
+      Postgres (raw_sales)
+            ↓
+      Airflow DAG (ingestão + validação)
+            ↓
+      dbt models (staging + marts)
+            ↓
+      tabelas analíticas (sales_summary)
+
+
+# 📦 2. Pré-requisitos ......................................................................
+
+Antes da instalação:
+
+      Docker Engine 20+
+      Docker Compose v2+
+      Git
+      WSL2 (Windows) ou Linux/MacOS
+
+Verificação:
+
+      docker --version
+      docker compose version
+      git --version
+
+
+# 📥 3. Clonagem do Repositório .............................................................
+
+git clone https://github.com/gitvitct/PRJ_PIPE_PG_DBT_AIRFLOW_GIT.git
+cd PRJ_PIPE_PG_DBT_AIRFLOW_GIT
+
+
+
+
+
+# ⚙️ 4. Inicialização do Ambiente (Bootstrap) ..............................................
+
+Permissão de execução:
+      chmod +x bootstrap.sh
+
+Execução do ambiente completo:
+      ./bootstrap.sh
+
+O que este script executa internamente:
+
+      Criação do arquivo .env
+      Definição de variáveis de ambiente:
+      Postgres (AIRFLOW_DB + DW_DB)
+      credenciais padrão (admin/admin)
+      Build das imagens Docker (Airflow + dbt + Postgres)
+      Inicialização do Docker Compose
+      Criação de diretórios de logs e permissões
+      Inicialização do Airflow metadata database
+      Subida dos serviços:
+      postgres
+      airflow-webserver
+      airflow-scheduler
+      airflow-triggerer
+
+
+# 🧩 5. Validação da Infraestrutura .........................................................
+
+Verificação dos containers:
+
+docker ps
+
+Esperado:
+
+      postgres          (healthy)
+      airflow-webserver (healthy)
+      airflow-scheduler (healthy)
+      airflow-triggerer (up)
+
+
+# 🌐 6. Acesso à Interface Airflow ..........................................................
+
+URL:
+
+      http://localhost:8080
+
+Credenciais padrão:
+
+      user: airflow
+      password: airflow
+
+
+# 🔄 7. Execução do Pipeline (DAG) ..........................................................
+
+No Airflow:
+
+Ativar DAG:
+
+      sales_pipeline
+            Executar manualmente (Trigger DAG)
+
+      Monitorar etapas:
+            create_table      → criação de schema raw
+            load_sales        → ingestão e validação de dados
+            run_dbt           → transformação analítica
+
+
+# 🗄️ 8. Validação no Banco de Dados ........................................................
+
+Acesso via CLI:
+
+      docker exec -it docker-postgres-1 psql -U admin -d sales_dw
+      psql -h postgres -p 5432 -U admin -d sales_dw
+
+
+Verificação:
+
+\dt
+      SELECT * FROM public.raw_sales LIMIT 10;
+      SELECT * FROM public.sales_summary;
+
+
+            List of relations
+      Schema |     Name      | Type  | Owner 
+      --------+---------------+-------+-------
+      public | raw_sales     | table | admin
+      public | sales_summary | table | admin
+
+
+# 🧪 9. Execução Manual do dbt (Opcional) ...................................................
+
+Acesso ao container:
+
+      docker exec -it docker-airflow-webserver-1 bash
+
+Execução:
+
+cd /opt/airflow/dbt_project
+
+      dbt debug --profiles-dir .
+      dbt run --profiles-dir .
+
+
+# 📊 10. Monitoramento e Observabilidade ....................................................
+
+Logs Airflow:
+      docker logs -f docker-airflow-scheduler-1
+      docker logs -f docker-airflow-webserver-1
+
+Logs de pipeline customizado:
+      tail -f logs/pipeline.log
+
+
+# 🔁 11. Reset / Rebuild do Ambiente ........................................................
+
+Para reinicialização completa:
+
+      docker compose down -v
+      docker compose up --build
+
+
+
+
+
+
+
+
 # 🚀 PRJ_PIPE_PG_DBT_AIRFLOW ################################################################################
 
 Pipeline de Engenharia de Dados desenvolvido com Apache Airflow, dbt, PostgreSQL, Docker e Pytest, simulando um fluxo completo de ingestão, validação, transformação e disponibilização de dados para análise.
