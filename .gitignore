@@ -15,3 +15,5 @@ dbt_packages/
 .vscode/
 
 data/deadletter/
+
+projeto_documentacao.zip

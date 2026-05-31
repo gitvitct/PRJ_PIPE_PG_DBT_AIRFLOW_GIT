@@ -6,13 +6,13 @@ RUN apt-get update && apt-get install -y \
     gcc \
     python3-dev
 
-# Diretórios dbt
-RUN mkdir -p /opt/airflow/dbt_project/logs && \
-    chmod -R 777 /opt/airflow/dbt_project
+RUN mkdir -p /opt/airflow/logs \
+    /opt/airflow/dbt_project/logs \
+    /tmp/dbt_logs
 
-# Logs alternativos
-RUN mkdir -p /tmp/dbt_logs && \
-    chmod -R 777 /tmp/dbt_logs
+RUN chmod -R 777 /opt/airflow/logs \
+    /opt/airflow/dbt_project \
+    /tmp/dbt_logs
 
 USER airflow
 

@@ -5,9 +5,6 @@ services:
   # =========================================================
   postgres:
     image: postgres:15
-
-    #container_name: postgres_dw
-
     restart: always
 
     env_file:
@@ -16,8 +13,6 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-
-      # Metadata DB do Airflow
       POSTGRES_DB: ${AIRFLOW_DB}
 
     ports:
@@ -25,12 +20,10 @@ services:
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
-      # Scripts SQL executados automaticamente
       - ./init:/docker-entrypoint-initdb.d
 
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${AIRFLOW_DB}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -43,10 +36,8 @@ services:
   # AIRFLOW INIT
   # =========================================================
   airflow-init:
-
     build: .
-
-    #container_name: airflow_init
+    user: "50000:0"
 
     depends_on:
       postgres:
@@ -56,38 +47,24 @@ services:
       - .env
 
     environment:
-
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
-
       AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
-
       AIRFLOW__API__AUTH_BACKENDS: airflow.api.auth.backend.basic_auth
-
       AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "true"
 
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${AIRFLOW_DB}"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${AIRFLOW_DB}
 
     command: >
       bash -c "
-        airflow db migrate &&
-
-        airflow users create \
-          --username airflow \
-          --password airflow \
-          --firstname Airflow \
-          --lastname Admin \
-          --role Admin \
-          --email admin@email.com || true &&
-
-        airflow connections add postgres_dw \
-          --conn-type postgres \
-          --conn-host postgres \
-          --conn-schema sales_dw \
-          --conn-login ${POSTGRES_USER} \
-          --conn-password ${POSTGRES_PASSWORD} \
-          --conn-port 5432 || true
+      airflow db migrate &&
+      airflow users create
+        --username airflow
+        --password airflow
+        --firstname Airflow
+        --lastname Admin
+        --role Admin
+        --email admin@email.com || true
       "
 
     volumes:
@@ -97,21 +74,17 @@ services:
       - ../logs:/opt/airflow/logs
       - ../scripts:/opt/airflow/scripts
       - ../tests:/opt/airflow/tests
-      - ./dbt_project/dbt_logs:/tmp/dbt_logs
 
     networks:
       - airflow_network
 
 
   # =========================================================
-  # AIRFLOW WEBSERVER
+  # WEBSERVER
   # =========================================================
   airflow-webserver:
-
     build: .
-
-    #container_name: airflow_webserver
-
+    user: "50000:0"
     restart: always
 
     depends_on:
@@ -122,18 +95,9 @@ services:
       - .env
 
     environment:
-
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
-
-      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
-
-      AIRFLOW__API__AUTH_BACKENDS: airflow.api.auth.backend.basic_auth
-
-      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "true"
-
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${AIRFLOW_DB}"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${AIRFLOW_DB}
 
     command: webserver
 
@@ -147,10 +111,9 @@ services:
       - ../logs:/opt/airflow/logs
       - ../scripts:/opt/airflow/scripts
       - ../tests:/opt/airflow/tests
-      - ./dbt_project/dbt_logs:/tmp/dbt_logs
 
     healthcheck:
-      test: ["CMD-SHELL", "curl --fail http://localhost:8080/health || exit 1"]
+      test: ["CMD-SHELL", "airflow jobs check --job-type WebserverJob --hostname $$HOSTNAME"]
       interval: 10s
       timeout: 10s
       retries: 5
@@ -160,14 +123,11 @@ services:
 
 
   # =========================================================
-  # AIRFLOW SCHEDULER
+  # SCHEDULER
   # =========================================================
   airflow-scheduler:
-
     build: .
-
-    #container_name: airflow_scheduler
-
+    user: "50000:0"
     restart: always
 
     depends_on:
@@ -178,12 +138,9 @@ services:
       - .env
 
     environment:
-
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
-
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${AIRFLOW_DB}"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${AIRFLOW_DB}
 
     command: scheduler
 
@@ -194,7 +151,6 @@ services:
       - ../logs:/opt/airflow/logs
       - ../scripts:/opt/airflow/scripts
       - ../tests:/opt/airflow/tests
-      - ./dbt_project/dbt_logs:/tmp/dbt_logs
 
     healthcheck:
       test: ["CMD-SHELL", "airflow jobs check --job-type SchedulerJob --hostname $$HOSTNAME"]
@@ -207,14 +163,11 @@ services:
 
 
   # =========================================================
-  # AIRFLOW TRIGGERER
+  # TRIGGERER
   # =========================================================
   airflow-triggerer:
-
     build: .
-
-    #container_name: airflow_triggerer
-
+    user: "50000:0"
     restart: always
 
     depends_on:
@@ -225,12 +178,8 @@ services:
       - .env
 
     environment:
-
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-
-      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
-
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${AIRFLOW_DB}"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${AIRFLOW_DB}
 
     command: triggerer
 
@@ -241,7 +190,6 @@ services:
       - ../logs:/opt/airflow/logs
       - ../scripts:/opt/airflow/scripts
       - ../tests:/opt/airflow/tests
-      - ./dbt_project/dbt_logs:/tmp/dbt_logs
 
     networks:
       - airflow_network
@@ -251,11 +199,7 @@ services:
   # PGADMIN
   # =========================================================
   pgadmin:
-
     image: dpage/pgadmin4
-
-    #container_name: pgadmin
-
     restart: always
 
     environment:
@@ -274,7 +218,7 @@ services:
 
 
 # =========================================================
-# NETWORK
+# NETWORKS
 # =========================================================
 networks:
   airflow_network:
