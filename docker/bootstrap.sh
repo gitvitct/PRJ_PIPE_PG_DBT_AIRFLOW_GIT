@@ -42,6 +42,14 @@ echo ".env criado com sucesso."
 
 echo ""
 echo "========================================="
+echo "Ajustando permissões do dbt"
+echo "========================================="
+
+sudo chown -R 50000:root ../dbt_project/
+
+
+echo ""
+echo "========================================="
 echo "Subindo containers"
 echo "========================================="
 

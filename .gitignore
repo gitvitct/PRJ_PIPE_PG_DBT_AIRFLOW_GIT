@@ -17,3 +17,5 @@ dbt_packages/
 data/deadletter/
 
 projeto_documentacao.zip
+docker-compose-bkp.yml
+Dockerfile-bkp

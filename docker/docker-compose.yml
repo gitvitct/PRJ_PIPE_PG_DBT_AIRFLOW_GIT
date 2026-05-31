@@ -31,13 +31,11 @@ services:
     networks:
       - airflow_network
 
-
   # =========================================================
   # AIRFLOW INIT
   # =========================================================
   airflow-init:
     build: .
-    #user: "50000:0"
     user: "0:0"
 
     depends_on:
@@ -58,7 +56,18 @@ services:
 
     command: >
       bash -c "
+      mkdir -p /opt/airflow/logs/dag_processor_manager &&
+      mkdir -p /opt/airflow/logs/scheduler &&
+      mkdir -p /opt/airflow/data/deadletter &&
+
+      chown -R 50000:0 /opt/airflow/logs &&
+      chown -R 50000:0 /opt/airflow/data &&
+
+      chmod -R 775 /opt/airflow/logs &&
+      chmod -R 775 /opt/airflow/data &&
+
       airflow db migrate &&
+
       airflow users create
         --username airflow
         --password airflow
@@ -72,13 +81,12 @@ services:
       - ../dags:/opt/airflow/dags
       - ../data:/opt/airflow/data
       - ../dbt_project:/opt/airflow/dbt_project
-      - ../logs:/opt/airflow/logs
+      - airflow_logs:/opt/airflow/logs
       - ../scripts:/opt/airflow/scripts
       - ../tests:/opt/airflow/tests
 
     networks:
       - airflow_network
-
 
   # =========================================================
   # WEBSERVER
@@ -109,19 +117,18 @@ services:
       - ../dags:/opt/airflow/dags
       - ../data:/opt/airflow/data
       - ../dbt_project:/opt/airflow/dbt_project
-      - ../logs:/opt/airflow/logs
+      - airflow_logs:/opt/airflow/logs
       - ../scripts:/opt/airflow/scripts
       - ../tests:/opt/airflow/tests
 
     healthcheck:
-      test: ["CMD-SHELL", "airflow jobs check --job-type WebserverJob --hostname $$HOSTNAME"]
+      test: ["CMD-SHELL", "curl --fail http://localhost:8080/health || exit 1"]
       interval: 10s
       timeout: 10s
       retries: 5
 
     networks:
       - airflow_network
-
 
   # =========================================================
   # SCHEDULER
@@ -149,7 +156,7 @@ services:
       - ../dags:/opt/airflow/dags
       - ../data:/opt/airflow/data
       - ../dbt_project:/opt/airflow/dbt_project
-      - ../logs:/opt/airflow/logs
+      - airflow_logs:/opt/airflow/logs
       - ../scripts:/opt/airflow/scripts
       - ../tests:/opt/airflow/tests
 
@@ -161,7 +168,6 @@ services:
 
     networks:
       - airflow_network
-
 
   # =========================================================
   # TRIGGERER
@@ -188,13 +194,12 @@ services:
       - ../dags:/opt/airflow/dags
       - ../data:/opt/airflow/data
       - ../dbt_project:/opt/airflow/dbt_project
-      - ../logs:/opt/airflow/logs
+      - airflow_logs:/opt/airflow/logs
       - ../scripts:/opt/airflow/scripts
       - ../tests:/opt/airflow/tests
 
     networks:
       - airflow_network
-
 
   # =========================================================
   # PGADMIN
@@ -217,16 +222,16 @@ services:
     networks:
       - airflow_network
 
-
 # =========================================================
 # NETWORKS
 # =========================================================
 networks:
   airflow_network:
 
-
 # =========================================================
 # VOLUMES
 # =========================================================
 volumes:
   postgres_data:
+  airflow_logs:
+  airflow_data:
