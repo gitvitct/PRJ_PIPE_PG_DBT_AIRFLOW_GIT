@@ -68,7 +68,7 @@ O que este script executa internamente:
       
       Subida dos serviços:
             postgres
-            pgAdmin
+            dpage/pgadmin4
             airflow-webserver
             airflow-scheduler
             airflow-triggerer
@@ -84,6 +84,7 @@ O que este script executa internamente:
             airflow-webserver (healthy)
             airflow-scheduler (healthy)
             airflow-triggerer (up)
+            dpage/pgadmin4    (up)
 
 
 # 🌐 6. Acesso à Interface Airflow 
@@ -152,12 +153,12 @@ Ativar DAG:
 
 # 📊 10. Monitoramento e Observabilidade 
 
-- Logs Airflow:
-      docker logs -f docker-airflow-scheduler-1
-      docker logs -f docker-airflow-webserver-1
+      - Logs Airflow:
+            docker logs -f docker-airflow-scheduler-1
+            docker logs -f docker-airflow-webserver-1
 
-- Logs de pipeline customizado:
-      tail -f logs/pipeline.log
+      - Logs de pipeline customizado:
+            tail -f logs/pipeline.log
 
 
 # 🔁 11. Reset / Rebuild do Ambiente 
