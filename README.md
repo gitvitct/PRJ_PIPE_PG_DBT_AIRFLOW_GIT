@@ -1,14 +1,16 @@
-# 🚀 Instalação e Execução – PRJ_PIPE_PG_DBT_AIRFLOW (Nível Entrevista)
+# 🚀 Instalação e Execução – PRJ_PIPE_PG_DBT_AIRFLOW 
 
 
-# 🧠 1. Visão Geral da Arquitetura ..........................................................
+# 🧠 1. Visão Geral da Arquitetura 
+
+Pipeline desenvolvido com Apache Airflow, dbt, PostgreSQL, Docker e Pytest, simulando um fluxo completo de ingestão, validação, transformação e disponibilização de dados para análise.
 
 Este projeto implementa um pipeline moderno de dados em ambiente containerizado, integrando:
 
-PostgreSQL              → camada de armazenamento (DW + metadata Airflow)
-Apache Airflow          → orquestração do pipeline (DAGs)
-dbt (data build tool)   → transformação ELT (camada analítica)
-Docker Compose          → provisionamento completo do ambiente
+- PostgreSQL              → camada de armazenamento (DW + metadata Airflow)
+- Apache Airflow          → orquestração do pipeline (DAGs)
+- dbt (data build tool)   → transformação ELT (camada analítica)
+- Docker Compose          → provisionamento completo do ambiente
 
 Fluxo de dados:
 
@@ -21,7 +23,7 @@ Fluxo de dados:
       tabelas analíticas (sales_summary)
 
 
-# 📦 2. Pré-requisitos ......................................................................
+# 📦 2. Pré-requisitos 
 
 Antes da instalação:
 
@@ -37,22 +39,21 @@ Verificação:
       git --version
 
 
-# 📥 3. Clonagem do Repositório .............................................................
+# 📥 3. Clonagem do Repositório 
 
-git clone https://github.com/gitvitct/PRJ_PIPE_PG_DBT_AIRFLOW_GIT.git
-cd PRJ_PIPE_PG_DBT_AIRFLOW_GIT
-
-
-
+      git clone https://github.com/gitvitct/PRJ_PIPE_PG_DBT_AIRFLOW_GIT.git
+      
+      cd PRJ_PIPE_PG_DBT_AIRFLOW_GIT
 
 
-# ⚙️ 4. Inicialização do Ambiente (Bootstrap) ..............................................
+# ⚙️ 4. Inicialização do Ambiente (Bootstrap) 
 
-Permissão de execução:
-      chmod +x bootstrap.sh
+      - Permissão de execução:
+            chmod +x bootstrap.sh
 
-Execução do ambiente completo:
-      ./bootstrap.sh
+      - Execução do ambiente completo:
+            ./bootstrap.sh
+
 
 O que este script executa internamente:
 
@@ -71,33 +72,31 @@ O que este script executa internamente:
       airflow-triggerer
 
 
-# 🧩 5. Validação da Infraestrutura .........................................................
+# 🧩 5. Validação da Infraestrutura 
 
-Verificação dos containers:
+- Verificação dos containers:
+      docker ps
 
-docker ps
-
-Esperado:
-
+- Esperado:
       postgres          (healthy)
       airflow-webserver (healthy)
       airflow-scheduler (healthy)
       airflow-triggerer (up)
 
 
-# 🌐 6. Acesso à Interface Airflow ..........................................................
+# 🌐 6. Acesso à Interface Airflow 
 
-URL:
+- URL:
 
       http://localhost:8080
 
-Credenciais padrão:
+- Credenciais padrão:
 
       user: airflow
       password: airflow
 
 
-# 🔄 7. Execução do Pipeline (DAG) ..........................................................
+# 🔄 7. Execução do Pipeline (DAG) 
 
 No Airflow:
 
@@ -112,17 +111,17 @@ Ativar DAG:
             run_dbt           → transformação analítica
 
 
-# 🗄️ 8. Validação no Banco de Dados ........................................................
+# 🗄️ 8. Validação no Banco de Dados 
 
-Acesso via CLI:
+- Acesso via CLI:
 
       docker exec -it docker-postgres-1 psql -U admin -d sales_dw
       psql -h postgres -p 5432 -U admin -d sales_dw
 
 
-Verificação:
+- Verificação:
 
-\dt
+      \dt
       SELECT * FROM public.raw_sales LIMIT 10;
       SELECT * FROM public.sales_summary;
 
@@ -134,13 +133,13 @@ Verificação:
       public | sales_summary | table | admin
 
 
-# 🧪 9. Execução Manual do dbt (Opcional) ...................................................
+# 🧪 9. Execução Manual do dbt (Opcional) 
 
-Acesso ao container:
+- Acesso ao container:
 
       docker exec -it docker-airflow-webserver-1 bash
 
-Execução:
+- Execução:
 
 cd /opt/airflow/dbt_project
 
@@ -148,19 +147,19 @@ cd /opt/airflow/dbt_project
       dbt run --profiles-dir .
 
 
-# 📊 10. Monitoramento e Observabilidade ....................................................
+# 📊 10. Monitoramento e Observabilidade 
 
-Logs Airflow:
+- Logs Airflow:
       docker logs -f docker-airflow-scheduler-1
       docker logs -f docker-airflow-webserver-1
 
-Logs de pipeline customizado:
+- Logs de pipeline customizado:
       tail -f logs/pipeline.log
 
 
-# 🔁 11. Reset / Rebuild do Ambiente ........................................................
+# 🔁 11. Reset / Rebuild do Ambiente 
 
-Para reinicialização completa:
+- Para reinicialização completa:
 
       docker compose down -v
       docker compose up --build
