@@ -1,5 +1,5 @@
 # 🚀 Instalação, Execução e Arquitetura – PRJ_PIPE_PG_DBT_AIRFLOW 
-   # 🧠 1. Visão Geral
+## 🧠 1. Visão Geral
 
 Pipeline desenvolvido com Apache Airflow, dbt, PostgreSQL, Docker e Pytest, simulando um fluxo completo de ingestão, validação, transformação e disponibilização de dados para análise.
 
@@ -21,7 +21,7 @@ Pipeline desenvolvido com Apache Airflow, dbt, PostgreSQL, Docker e Pytest, simu
       tabelas analíticas (sales_summary)
 
 
-# 📦 2. Pré-requisitos 
+## 📦 2. Pré-requisitos 
 
 Antes da instalação:
 
@@ -37,14 +37,14 @@ Verificação:
       git --version
 
 
-# 📥 3. Clonagem do Repositório 
+## 📥 3. Clonagem do Repositório 
 
       git clone https://github.com/gitvitct/PRJ_PIPE_PG_DBT_AIRFLOW_GIT.git
       
       cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT
 
 
-# ⚙️ 4. Inicialização do Ambiente (Bootstrap) 
+## ⚙️ 4. Inicialização do Ambiente (Bootstrap) 
 
       cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT/docker 
 
@@ -74,7 +74,7 @@ Verificação:
                   airflow-triggerer
 
 
-# 🧩 5. Validação da Infraestrutura 
+## 🧩 5. Validação da Infraestrutura 
 
       - Verificação dos containers:
             docker ps
@@ -87,7 +87,7 @@ Verificação:
             dpage/pgadmin4    (up)
 
 
-# 📊 6. Execução dos Testes (pytest) 
+## 📊 6. Execução dos Testes (pytest) 
 
       cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT/docker 
       docker compose exec airflow-webserver pytest -v -p no:cacheprovider
@@ -105,7 +105,7 @@ Verificação:
       password: airflow
 
 
-# 🔄 8. Execução do Pipeline (DAG) 
+## 🔄 8. Execução do Pipeline (DAG) 
 
 - No Airflow:
 
@@ -120,7 +120,7 @@ Ativar DAG:
             run_dbt           → transformação analítica
 
 
-# 🗄️ 9. Validação no Banco de Dados 
+## 🗄️ 9. Validação no Banco de Dados 
 
 - Acesso via CLI:
 
@@ -143,7 +143,7 @@ Ativar DAG:
       public | sales_summary | table | admin
 
 
-# 🧪 10. Execução Manual do dbt (Opcional) 
+## 🧪 10. Execução Manual do dbt (Opcional) 
 
 - Acesso ao container:
 
@@ -157,7 +157,7 @@ Ativar DAG:
             dbt run --profiles-dir .
 
 
-# 📊 11. Monitoramento e Observabilidade 
+## 📊 11. Monitoramento e Observabilidade 
 
       - Logs Airflow:
             docker logs -f docker-airflow-scheduler-1
@@ -167,7 +167,7 @@ Ativar DAG:
             tail -f logs/pipeline.log
 
 
-# 🔁 12. Reset / Rebuild do Ambiente 
+## 🔁 12. Reset / Rebuild do Ambiente 
 
 - Para reinicialização completa:
 
@@ -177,7 +177,7 @@ Ativar DAG:
    
 
 
-# 📂 Estrutura do Projeto ################################################################################
+## 📂 Estrutura do Projeto ################################################################################
 
 PRJ_PIPE_PG_DBT_AIRFLOW/
       │
