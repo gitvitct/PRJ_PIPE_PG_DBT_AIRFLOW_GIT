@@ -9,6 +9,7 @@ Pipeline desenvolvido com Apache Airflow, dbt, PostgreSQL, Docker e Pytest, simu
       - Apache Airflow          → orquestração do pipeline (DAGs)
       - dbt (data build tool)   → transformação ELT (camada analítica)
       - Docker Compose          → provisionamento completo do ambiente
+      - Pytest                  → Testes unitários e integrados
 
 - Fluxo de dados:
 
