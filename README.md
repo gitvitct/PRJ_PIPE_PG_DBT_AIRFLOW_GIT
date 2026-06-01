@@ -41,12 +41,12 @@ Verificação:
 
       git clone https://github.com/gitvitct/PRJ_PIPE_PG_DBT_AIRFLOW_GIT.git
       
-      cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT
+      **cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT**
 
 
 ## ⚙️ 4. Inicialização do Ambiente (Bootstrap) 
 
-      cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT/docker 
+      **cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT/docker** 
 
             - Permissão de execução:
                   chmod +x bootstrap.sh
@@ -55,7 +55,7 @@ Verificação:
                   ./bootstrap.sh
 
 
-      O que este script executa internamente:
+### O que este script executa internamente:
 
             Criação do ficheiro .env
             Definição de variáveis de ambiente:
@@ -89,7 +89,7 @@ Verificação:
 
 ## 📊 6. Execução dos Testes (pytest) 
 
-      cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT/docker 
+      **cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT/docker** 
       docker compose exec airflow-webserver pytest -v -p no:cacheprovider
 
 
