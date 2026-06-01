@@ -1,5 +1,5 @@
-# 🚀 Instalação e Execução – PRJ_PIPE_PG_DBT_AIRFLOW 
-   # 🧠 1. Visão Geral da Arquitetura 
+# 🚀 Instalação, Execução e Arquitetura – PRJ_PIPE_PG_DBT_AIRFLOW 
+   # 🧠 1. Visão Geral
 
 Pipeline desenvolvido com Apache Airflow, dbt, PostgreSQL, Docker e Pytest, simulando um fluxo completo de ingestão, validação, transformação e disponibilização de dados para análise.
 
