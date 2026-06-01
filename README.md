@@ -41,12 +41,12 @@ Verificação:
 
       git clone https://github.com/gitvitct/PRJ_PIPE_PG_DBT_AIRFLOW_GIT.git
       
-      cd "${prj_dir}"/PRJ_PIPE_PG_DBT_AIRFLOW_GIT
+      cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT
 
 
 # ⚙️ 4. Inicialização do Ambiente (Bootstrap) 
 
-      cd "${prj_dir}"/PRJ_PIPE_PG_DBT_AIRFLOW_GIT/docker 
+      cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT/docker 
 
             - Permissão de execução:
                   chmod +x bootstrap.sh
@@ -55,23 +55,23 @@ Verificação:
                   ./bootstrap.sh
 
 
-O que este script executa internamente:
+      O que este script executa internamente:
 
-      Criação do ficheiro .env
-      Definição de variáveis de ambiente:
-      Postgres (AIRFLOW_DB + DW_DB)
-      Credenciais padrão (admin/admin)
-      Build das imagens Docker (Airflow + dbt + Postgres)
-      Inicialização do Docker Compose
-      Criação de diretórios de logs e permissões
-      Inicialização do Airflow metadata database
-      
-      Subida dos serviços:
-            postgres
-            dpage/pgadmin4
-            airflow-webserver
-            airflow-scheduler
-            airflow-triggerer
+            Criação do ficheiro .env
+            Definição de variáveis de ambiente:
+            Postgres (AIRFLOW_DB + DW_DB)
+            Credenciais padrão (admin/admin)
+            Build das imagens Docker (Airflow + dbt + Postgres)
+            Inicialização do Docker Compose
+            Criação de diretórios de logs e permissões
+            Inicialização do Airflow metadata database
+            
+            Subida dos serviços:
+                  postgres
+                  dpage/pgadmin4
+                  airflow-webserver
+                  airflow-scheduler
+                  airflow-triggerer
 
 
 # 🧩 5. Validação da Infraestrutura 
@@ -87,7 +87,13 @@ O que este script executa internamente:
             dpage/pgadmin4    (up)
 
 
-# 🌐 6. Acesso à Interface Airflow 
+# 📊 6. Execução dos Testes (pytest) 
+
+      cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT/docker 
+      docker compose exec airflow-webserver pytest -v -p no:cacheprovider
+
+
+# 🌐 7. Acesso à Interface Airflow 
 
 - URL:
 
@@ -99,7 +105,7 @@ O que este script executa internamente:
       password: airflow
 
 
-# 🔄 7. Execução do Pipeline (DAG) 
+# 🔄 8. Execução do Pipeline (DAG) 
 
 - No Airflow:
 
@@ -114,7 +120,7 @@ Ativar DAG:
             run_dbt           → transformação analítica
 
 
-# 🗄️ 8. Validação no Banco de Dados 
+# 🗄️ 9. Validação no Banco de Dados 
 
 - Acesso via CLI:
 
@@ -137,7 +143,7 @@ Ativar DAG:
       public | sales_summary | table | admin
 
 
-# 🧪 9. Execução Manual do dbt (Opcional) 
+# 🧪 10. Execução Manual do dbt (Opcional) 
 
 - Acesso ao container:
 
@@ -151,7 +157,7 @@ Ativar DAG:
             dbt run --profiles-dir .
 
 
-# 📊 10. Monitoramento e Observabilidade 
+# 📊 11. Monitoramento e Observabilidade 
 
       - Logs Airflow:
             docker logs -f docker-airflow-scheduler-1
@@ -161,7 +167,7 @@ Ativar DAG:
             tail -f logs/pipeline.log
 
 
-# 🔁 11. Reset / Rebuild do Ambiente 
+# 🔁 12. Reset / Rebuild do Ambiente 
 
 - Para reinicialização completa:
 
