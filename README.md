@@ -59,7 +59,7 @@ Verificação:
 ### O que este script executa internamente:
 
             Criação do ficheiro .env
-            Definição de variáveis de ambiente:
+            Definição de variáveis de ambiente
             Postgres (AIRFLOW_DB + DW_DB)
             Credenciais padrão (admin/admin)
             Build das imagens Docker (Airflow + dbt + Postgres)
@@ -116,7 +116,7 @@ Ativar DAG:
             Executar manualmente (Trigger DAG)
 
       Monitorar etapas:
-            create_table      → criação de schema raw
+            create_table      → criação do schema raw
             load_sales        → ingestão e validação de dados
             run_dbt           → transformação analítica
 
@@ -157,8 +157,26 @@ Ativar DAG:
             dbt debug --profiles-dir .
             dbt run --profiles-dir .
 
+## 🧯 11. Dead Letter (Tratamento de Registros Inválidos)
 
-## 📊 11. Monitoramento e Observabilidade 
+**/opt/airflow/data/deadletter.json**
+
+No pipeline `sales_pipeline`, o **Dead Letter** é responsável por armazenar registros que falham nas validações de qualidade durante a etapa de ingestão de dados (`load_sales`).
+
+Ele garante que nenhum dado inválido seja perdido silenciosamente, permitindo auditoria e reprocessamento posterior.
+
+      Ex:
+      {
+            "record": {
+                  "order_id": 14,
+                  "customer_id": 16,
+                  "amount": -11.28,
+                  "purchase_date": "2026-05-31 20:33:31"
+            },
+            "error": "Amount inv\u00e1lido"
+      }
+
+## 📊 12. Monitoramento e Observabilidade 
 
       - Logs Airflow:
             docker logs -f docker-airflow-scheduler-1
@@ -168,7 +186,7 @@ Ativar DAG:
             tail -f logs/pipeline.log
 
 
-## 🔁 12. Reset / Rebuild do Ambiente 
+## 🔁 13. Reset / Rebuild do Ambiente 
 
 - Para reinicialização completa:
 
