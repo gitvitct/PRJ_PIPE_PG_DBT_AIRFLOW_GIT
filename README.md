@@ -1,262 +1,382 @@
-# 🚀 Instalação, Execução e Arquitetura – PRJ_PIPE_PG_DBT_AIRFLOW 
-## 🧠 1. Visão Geral
+## Documentation
 
-Pipeline desenvolvido com Apache Airflow, dbt, PostgreSQL, Docker e Pytest, simulando um fluxo completo de ingestão, validação, transformação e disponibilização de dados para análise.
+- 🇺🇸 English
+- 🇧🇷 [Português](docs/README_PT.md)
 
-- Este projeto implementa um pipeline moderno de dados em ambiente containerizado, integrando:
 
-      - PostgreSQL              → camada de armazenamento (DW + metadata Airflow)
-      - Apache Airflow          → orquestração do pipeline (DAGs)
-      - dbt (data build tool)   → transformação ELT (camada analítica)
-      - Docker Compose          → provisionamento completo do ambiente
-      - Pytest                  → Testes unitários e integrados
+# 🚀 Installation, Execution and Architecture – PRJ_PIPE_PG_DBT_AIRFLOW
 
-- Fluxo de dados:
+## 🧠 1. Overview
 
-      Postgres (raw_sales)
-            ↓
-      Airflow DAG (ingestão + validação)
-            ↓
-      dbt models (staging + marts)
-            ↓
-      tabelas analíticas (sales_summary)
+This project implements a modern data pipeline using Apache Airflow, dbt, PostgreSQL, Docker, and Pytest, simulating a complete workflow for data ingestion, validation, transformation, and analytics delivery.
 
+### Technologies Used
 
-## 📦 2. Pré-requisitos 
+* **PostgreSQL** → Data Warehouse and Airflow metadata storage
+* **Apache Airflow** → Pipeline orchestration
+* **dbt (Data Build Tool)** → ELT transformations and analytical layer
+* **Docker Compose** → Environment provisioning and container management
+* **Pytest** → Unit, integration, and end-to-end testing
 
-Antes da instalação:
+### Data Flow
 
-      Docker Engine 20+
-      Docker Compose v2+
-      Git
-      WSL2 (Windows) ou Linux/MacOS
+```text
+PostgreSQL (raw_sales)
+        ↓
+Airflow DAG (ingestion + validation)
+        ↓
+dbt Models (staging + marts)
+        ↓
+Analytical Tables (sales_summary)
+```
 
-Verificação:
+---
 
-      docker --version
-      docker compose version
-      git --version
+## 📦 2. Prerequisites
 
+Before installation, ensure the following tools are available:
 
-## 📥 3. Clonagem do Repositório 
+```bash
+Docker Engine 20+
+Docker Compose v2+
+Git
+WSL2 (Windows) or Linux/MacOS
+```
 
-      git clone https://github.com/gitvitct/PRJ_PIPE_PG_DBT_AIRFLOW_GIT.git
-      
-      cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT
+### Verify Installation
 
+```bash
+docker --version
+docker compose version
+git --version
+```
 
-## ⚙️ 4. Inicialização do Ambiente (Bootstrap) 
+---
 
-      cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT/docker
+## 📥 3. Clone the Repository
 
-            - Permissão de execução:
-                  chmod +x bootstrap.sh
+```bash
+git clone https://github.com/gitvitct/PRJ_PIPE_PG_DBT_AIRFLOW_GIT.git
 
-            - Execução do ambiente completo:
-                  ./bootstrap.sh
+cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT
+```
 
+---
 
-### O que este script executa internamente:
+## ⚙️ 4. Environment Initialization (Bootstrap)
 
-            Criação do ficheiro .env
-            Definição de variáveis de ambiente
-            Postgres (AIRFLOW_DB + DW_DB)
-            Credenciais padrão (admin/admin)
-            Build das imagens Docker (Airflow + dbt + Postgres)
-            Inicialização do Docker Compose
-            Criação de diretórios de logs e permissões
-            Inicialização do Airflow metadata database
-            
-            Subida dos serviços:
-                  postgres
-                  dpage/pgadmin4
-                  airflow-webserver
-                  airflow-scheduler
-                  airflow-triggerer
+Navigate to the Docker directory:
 
+```bash
+cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT/docker
+```
 
-## 🧩 5. Validação da Infraestrutura 
+Grant execution permission:
 
-      - Verificação dos containers:
-            docker ps
+```bash
+chmod +x bootstrap.sh
+```
 
-      - Esperado:
-            postgres          (healthy)
-            airflow-webserver (healthy)
-            airflow-scheduler (healthy)
-            airflow-triggerer (up)
-            dpage/pgadmin4    (up)
+Start the complete environment:
 
+```bash
+./bootstrap.sh
+```
 
-## 📊 6. Execução dos Testes (pytest) 
+### What the Bootstrap Script Does
 
-      cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT/docker
-      docker compose exec airflow-webserver pytest -v -p no:cacheprovider
+The script automatically performs the following tasks:
 
+* Creates the `.env` file
+* Defines environment variables
+* Creates PostgreSQL databases (`AIRFLOW_DB` and `DW_DB`)
+* Configures default credentials (`admin/admin`)
+* Builds Docker images (Airflow, dbt, PostgreSQL)
+* Starts Docker Compose services
+* Creates log directories and permissions
+* Initializes the Airflow metadata database
 
-# 🌐 7. Acesso à Interface Airflow 
+### Services Started
 
-- URL:
+* PostgreSQL
+* pgAdmin
+* Airflow Webserver
+* Airflow Scheduler
+* Airflow Triggerer
 
-      http://localhost:8080
+---
 
-- Credenciais padrão:
+## 🧩 5. Infrastructure Validation
 
-      user: airflow
-      password: airflow
+Verify running containers:
 
+```bash
+docker ps
+```
 
-## 🔄 8. Execução do Pipeline (DAG) 
+Expected output:
 
-- No Airflow:
+```text
+postgres              (healthy)
+airflow-webserver     (healthy)
+airflow-scheduler     (healthy)
+airflow-triggerer     (running)
+dpage/pgadmin4        (running)
+```
 
-Ativar DAG:
+---
 
-      sales_pipeline
-            Executar manualmente (Trigger DAG)
+## 📊 6. Running Tests (Pytest)
 
-      Monitorar etapas:
-            create_table      → criação do schema raw
-            load_sales        → ingestão e validação de dados
-            run_dbt           → transformação analítica
+Execute the test suite:
 
+```bash
+cd ${prj_dir}/PRJ_PIPE_PG_DBT_AIRFLOW_GIT/docker
 
-## 🗄️ 9. Validação no Banco de Dados 
+docker compose exec airflow-webserver pytest -v -p no:cacheprovider
+```
 
-- Acesso via CLI:
+---
 
-      docker exec -it docker-postgres-1 psql -U admin -d sales_dw
-      psql -h postgres -p 5432 -U admin -d sales_dw
+## 🌐 7. Accessing the Airflow UI
 
+### URL
 
-- Verificação:
+```text
+http://localhost:8080
+```
 
-      \dt
+### Default Credentials
 
-      SELECT * FROM public.raw_sales LIMIT 10;
-      SELECT * FROM public.sales_summary;
+```text
+Username: airflow
+Password: airflow
+```
 
+---
 
-            List of relations
-      Schema |     Name      | Type  | Owner 
-      --------+---------------+-------+-------
-      public | raw_sales     | table | admin
-      public | sales_summary | table | admin
+## 🔄 8. Executing the Pipeline (DAG)
 
+Within the Airflow UI:
 
-## 🧪 10. Execução Manual do dbt (Opcional) 
+### Enable DAG
 
-- Acesso ao container:
+```text
+sales_pipeline
+```
 
-      docker exec -it docker-airflow-webserver-1 bash
+### Trigger DAG Manually
 
-- Execução:
+Click **Trigger DAG**.
 
-      cd /opt/airflow/dbt_project
+### Pipeline Stages
 
-            dbt debug --profiles-dir .
-            dbt run --profiles-dir .
+```text
+create_table  → Create raw schema and tables
+load_sales    → Data ingestion and validation
+run_dbt       → Analytical transformations
+```
 
-## 🧯 11. Dead Letter (Tratamento de Registros Inválidos)
+---
 
-**/opt/airflow/data/deadletter.json**
+## 🗄️ 9. Database Validation
 
-No pipeline `sales_pipeline`, o **Dead Letter** é responsável por armazenar registros que falham nas validações de qualidade durante a etapa de ingestão de dados (`load_sales`).
+### Connect via CLI
 
-Ele garante que nenhum dado inválido seja perdido silenciosamente, permitindo auditoria e reprocessamento posterior.
+```bash
+docker exec -it docker-postgres-1 psql -U admin -d sales_dw
+```
 
-      Ex:
-      {
-            "record": {
-                  "order_id": 14,
-                  "customer_id": 16,
-                  "amount": -11.28,
-                  "purchase_date": "2026-05-31 20:33:31"
-            },
-            "error": "Amount inv\u00e1lido"
-      }
+or
 
-## 📊 12. Monitoramento e Observabilidade 
+```bash
+psql -h postgres -p 5432 -U admin -d sales_dw
+```
 
-      - Logs Airflow:
-            docker logs -f docker-airflow-scheduler-1
-            docker logs -f docker-airflow-webserver-1
+### Verify Tables
 
-      - Logs de pipeline customizado:
-            tail -f logs/pipeline.log
+```sql
+\dt
 
+SELECT * FROM public.raw_sales LIMIT 10;
 
-## 🔁 13. Reset / Rebuild do Ambiente 
+SELECT * FROM public.sales_summary;
+```
 
-- Para reinicialização completa:
+Expected output:
 
-      docker compose down -v
-      docker compose up -d
-      
-   
+```text
+Schema |      Name       | Type  | Owner
+-------+-----------------+-------+-------
+public | raw_sales       | table | admin
+public | sales_summary   | table | admin
+```
 
+---
 
-## 📂 Estrutura do Projeto ################################################################################
+## 🧪 10. Running dbt Manually (Optional)
 
+Access the Airflow container:
+
+```bash
+docker exec -it docker-airflow-webserver-1 bash
+```
+
+Navigate to the dbt project:
+
+```bash
+cd /opt/airflow/dbt_project
+```
+
+Execute:
+
+```bash
+dbt debug --profiles-dir .
+
+dbt run --profiles-dir .
+```
+
+---
+
+## 🧯 11. Dead Letter Queue (Invalid Record Handling)
+
+Location:
+
+```text
+/opt/airflow/data/deadletter.json
+```
+
+Within the `sales_pipeline`, the **Dead Letter Queue (DLQ)** stores records that fail data quality validations during the ingestion process (`load_sales`).
+
+This mechanism prevents invalid records from being silently discarded and enables auditing, troubleshooting, and future reprocessing.
+
+### Example
+
+```json
+{
+  "record": {
+    "order_id": 14,
+    "customer_id": 16,
+    "amount": -11.28,
+    "purchase_date": "2026-05-31 20:33:31"
+  },
+  "error": "Invalid amount"
+}
+```
+
+---
+
+## 📊 12. Monitoring and Observability
+
+### Airflow Logs
+
+```bash
+docker logs -f docker-airflow-scheduler-1
+
+docker logs -f docker-airflow-webserver-1
+```
+
+### Custom Pipeline Logs
+
+```bash
+tail -f logs/pipeline.log
+```
+
+---
+
+## 🔁 13. Environment Reset / Rebuild
+
+To completely rebuild the environment:
+
+```bash
+docker compose down -v
+
+docker compose up -d
+```
+
+---
+
+# 📂 Project Structure
+
+```text
 PRJ_PIPE_PG_DBT_AIRFLOW/
-      │
-      ├── dags/
-      │   └── sales_pipeline.py
-      │
-      ├── scripts/
-      │   ├── create_tables.py
-      │   ├── load_sales.py
-      │   ├── validation.py
-      │   ├── db_connection.py
-      │   ├── logger_config.py
-      │   └── make_deadletter_json.py
-      │
-      ├── dbt_project/
-      │   ├── models/
-      │   │   ├── staging/
-      │   │   │   └── stg_sales.sql
-      │   │   └── marts/
-      │   │       └── sales_summary.sql
-      │   ├── logs/
-      │   │   └── dbt.log
-      │   │
-      │   ├── dbt_project.yml
-      │   └── profiles.yml
-      │
-      ├── tests/
-      │   ├── unit/
-      │   │      ├── test_db_connection.py
-      │   │      ├── test_deadletter.py
-      │   │      ├── test_logger.py
-      │   │      └── test_validation.py
-      |   │
-      │   ├── integration/
-      │   │      ├── test_create_tables.py
-      │   │      ├── test_insert_raw_sales.py
-      │   │      ├── test_load_sales.py
-      │   │      └── test_postgres_connection.py
-      │   │
-      │   ├── airflow/
-      │   │      ├── test_dag_integrity.py
-      │   │      ├── test_dag_loaded.py
-      │   │      └── test_dag_tasks.py
-      │   │
-      │   ├── dbt/
-      │   │     ├── test_dbt_mart.py
-      │   │     ├── test_dbt_models.py
-      │   │     └── test_dbt_staging.py
-      │   │
-      │   └── e2e/
-      │         └── test_end_to_end_pipeline.py
-      │
-      ├── data/
-      │   └── deadletter/
-      │
-      ├── logs/
-      │   └── pipeline.log
-      │
-      ├── Dockerfile
-      ├── docker-compose.yml
-      ├── requirements.txt
-      └── README.md
+│
+├── dags/
+│   └── sales_pipeline.py
+│
+├── scripts/
+│   ├── create_tables.py
+│   ├── load_sales.py
+│   ├── validation.py
+│   ├── db_connection.py
+│   ├── logger_config.py
+│   └── make_deadletter_json.py
+│
+├── dbt_project/
+│   ├── models/
+│   │   ├── staging/
+│   │   │   └── stg_sales.sql
+│   │   └── marts/
+│   │       └── sales_summary.sql
+│   │
+│   ├── logs/
+│   │   └── dbt.log
+│   │
+│   ├── dbt_project.yml
+│   └── profiles.yml
+│
+├── tests/
+│   ├── unit/
+│   │   ├── test_db_connection.py
+│   │   ├── test_deadletter.py
+│   │   ├── test_logger.py
+│   │   └── test_validation.py
+│   │
+│   ├── integration/
+│   │   ├── test_create_tables.py
+│   │   ├── test_insert_raw_sales.py
+│   │   ├── test_load_sales.py
+│   │   └── test_postgres_connection.py
+│   │
+│   ├── airflow/
+│   │   ├── test_dag_integrity.py
+│   │   ├── test_dag_loaded.py
+│   │   └── test_dag_tasks.py
+│   │
+│   ├── dbt/
+│   │   ├── test_dbt_mart.py
+│   │   ├── test_dbt_models.py
+│   │   └── test_dbt_staging.py
+│   │
+│   └── e2e/
+│       └── test_end_to_end_pipeline.py
+│
+├── data/
+│   └── deadletter/
+│
+├── logs/
+│   └── pipeline.log
+│
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+└── README.md
+```
 
+---
+
+## 🎯 Project Objectives
+
+This project demonstrates practical experience with:
+
+* Data Engineering fundamentals
+* ELT pipelines using dbt
+* Workflow orchestration with Airflow
+* Containerized environments using Docker
+* Data quality validation
+* Dead Letter Queue implementation
+* PostgreSQL Data Warehousing
+* Automated testing with Pytest
+* Analytics-ready data modeling
+
+It was designed as a portfolio project to showcase modern Data Engineering best practices and production-like architecture.
